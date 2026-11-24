@@ -2,9 +2,6 @@
 
 A quiz chatbot for one university module. It asks questions only from the lecturer's slides, adjusts difficulty from a score for each topic, and lets the student dispute an answer so the bot re-checks its own source.
 
-README prose word count: about 780 (code, commands and image links not counted). Student ID 3196490.
-
-Report: the submitted PDF. Spec: [01_SPEC.md](01_SPEC.md). Prompt log: [02_PROMPT_LOG.md](02_PROMPT_LOG.md).
 
 ## Project status
 
