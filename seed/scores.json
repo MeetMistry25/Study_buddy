@@ -1,0 +1,7 @@
+{
+  "sam":   {"relational_model": {"score": 0.8, "answers": 5, "correct": 4}, "sql_basics": {"score": 0.8, "answers": 6, "correct": 5}, "joins": {"score": 0.5, "answers": 4, "correct": 3}, "normalisation": {"score": 0.62, "answers": 5, "correct": 2}, "indexes": {"score": 0.8, "answers": 3, "correct": 3}},
+  "alex":  {"relational_model": {"score": 0.75, "answers": 6, "correct": 5}, "sql_basics": {"score": 0.7, "answers": 5, "correct": 4}, "joins": {"score": 0.7, "answers": 5, "correct": 4}, "normalisation": {"score": 0.4, "answers": 6, "correct": 2}, "indexes": {"score": 0.7, "answers": 4, "correct": 3}},
+  "priya": {"relational_model": {"score": 0.7, "answers": 5, "correct": 4}, "sql_basics": {"score": 0.65, "answers": 4, "correct": 3}, "joins": {"score": 0.85, "answers": 6, "correct": 5}, "normalisation": {"score": 0.35, "answers": 5, "correct": 2}},
+  "jamal": {"relational_model": {"score": 0.65, "answers": 4, "correct": 3}, "sql_basics": {"score": 0.7, "answers": 5, "correct": 4}, "joins": {"score": 0.7, "answers": 5, "correct": 4}, "normalisation": {"score": 0.25, "answers": 4, "correct": 1}},
+  "mei":   {"relational_model": {"score": 0.8, "answers": 6, "correct": 5}, "sql_basics": {"score": 0.7, "answers": 5, "correct": 4}, "joins": {"score": 0.6, "answers": 4, "correct": 3}, "normalisation": {"score": 0.4, "answers": 5, "correct": 2}}
+}

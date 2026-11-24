@@ -1,0 +1,57 @@
+digraph G {
+  rankdir=LR; compound=true; nodesep=0.35; ranksep=0.7; pad=0.3; dpi=130;
+  fontname="DejaVu Sans"; labelloc=t; fontsize=20;
+  label="Study Buddy: parts, connections and where the AI acts";
+  node [shape=box, style="rounded,filled", fontname="DejaVu Sans", fontsize=12, margin="0.14,0.08"];
+  edge [fontname="DejaVu Sans", fontsize=10.5, color="#555555"];
+
+  node [fillcolor="#d9f0e3", color="#1f7a4d"];
+  subgraph cluster_people { label="Browser"; style="rounded,dashed"; color="#999999"; fontsize=13;
+    student [label="Student chat page\nquiz, answer, dispute,\nsummary"];
+    lecturer [label="Lecturer page\nupload, samples,\nreview list, class view"];
+  }
+  subgraph cluster_app { label="Flask app (Python)"; style="rounded"; color="#555555"; fontsize=13;
+    routes [label="app.py\nroutes + optional\nlecturer password"];
+    quiz [label="quiz.py\npick topic + difficulty\ngrade answer\nupdate topic score"];
+    disputes [label="disputes.py\nre-check key vs source\nundo score, flag question"];
+    lect [label="lecturer.py\nindex files, 3 samples,\nflags, anonymous class view"];
+    retr [label="retrieval.py\none chunk per slide\nTF-IDF search"];
+    llm [label="llm.py\nthe only file that\ntouches a model", penwidth=2.2];
+  }
+  subgraph cluster_data { label="Files on disk (JSON + Markdown)"; style="rounded"; color="#555555"; fontsize=13;
+    store [label="data/*.json\nchunks, questions,\nscores, flags"];
+    files [label="data/module/*.md\nlecture slides + notes"];
+  }
+  node [fillcolor="#fff1cc", color="#8a6100", style="rounded,filled,dashed"];
+  mock [label="Mock model (default)\nhand-written bank of 30 questions\nkeyword verify + sentence re-check\nSIMULATED"];
+  live [label="Live model call (Anthropic API)\ngenerate, verify, re-check\nbuilt, tested with a faked reply only\nSIMULATED"];
+  node [fillcolor="#eeeeee", color="#777777", style="rounded,filled,dotted"];
+  p1 [label="Embedding retrieval\nPLANNED"];
+  p2 [label="Student logins\nPLANNED"];
+  p3 [label="Student sees and corrects\ntheir inferred profile\nPLANNED"];
+  p4 [label="Reminder if lecturer never\nopens the review list\nPLANNED"];
+
+  student -> routes [label="answer / dispute /\nnext / end"];
+  lecturer -> routes [label="upload / review"];
+  routes -> quiz; routes -> disputes; routes -> lect;
+  quiz -> retr [label="chunks for a topic"];
+  quiz -> store [label="read + write scores"];
+  disputes -> store [label="undo score,\nadd flag"];
+  lect -> store [label="status, keys,\nclass totals"];
+  files -> retr [label="index"];
+  quiz -> llm [label="AI: generate + verify\nkey against source", color="#2f5fd0", fontcolor="#2f5fd0", penwidth=1.8];
+  disputes -> llm [label="AI: re-check key\nagainst source", color="#2f5fd0", fontcolor="#2f5fd0", penwidth=1.8];
+  llm -> mock [label="default"]; llm -> live [label="SB_MODE=live"];
+  retr -> p1 [style=dotted, arrowhead=none, color="#999999"];
+  routes -> p2 [style=dotted, arrowhead=none, color="#999999"];
+  student -> p3 [style=dotted, arrowhead=none, color="#999999"];
+  lect -> p4 [style=dotted, arrowhead=none, color="#999999"];
+
+  subgraph cluster_key { label="Key"; style="rounded"; color="#999999"; fontsize=12;
+    k1 [label="Implemented and tested", fillcolor="#d9f0e3", color="#1f7a4d", style="rounded,filled"];
+    k2 [label="Simulated or only partly tested", fillcolor="#fff1cc", color="#8a6100", style="rounded,filled,dashed"];
+    k3 [label="Planned, not built", fillcolor="#eeeeee", color="#777777", style="rounded,filled,dotted"];
+    k4 [label="Blue arrow = AI behaviour", shape=plaintext, style="", fontcolor="#2f5fd0"];
+    k1 -> k2 -> k3 -> k4 [style=invis];
+  }
+}

@@ -1,0 +1,505 @@
+[
+ {
+  "id": "rm1",
+  "topic": "relational_model",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "What is the term for a single row in a relation?",
+  "options": [
+   "Attribute",
+   "Tuple",
+   "Domain",
+   "Schema"
+  ],
+  "key": "Tuple",
+  "source": "l1-s3",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "rm2",
+  "topic": "relational_model",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "Which statement about a primary key is true?",
+  "options": [
+   "It may contain duplicate values",
+   "It must be a single attribute",
+   "It cannot contain NULL values",
+   "It refers to a key in another table"
+  ],
+  "key": "It cannot contain NULL values",
+  "source": "l1-s5",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "rm3",
+  "topic": "relational_model",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "What do foreign keys enforce between related tables?",
+  "options": [
+   "Atomicity",
+   "Referential integrity",
+   "Domain integrity",
+   "Sort order"
+  ],
+  "key": "Referential integrity",
+  "source": "l1-s6",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "rm4",
+  "topic": "relational_model",
+  "difficulty": "medium",
+  "type": "short",
+  "text": "What are candidate keys that were not chosen as the primary key called?",
+  "options": [],
+  "key": "Alternate keys",
+  "required_terms": [
+   "alternate"
+  ],
+  "source": "l1-s8",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "rm5",
+  "topic": "relational_model",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "A table has several candidate keys. How many of them can be chosen as the primary key?",
+  "options": [
+   "All of them",
+   "Only one",
+   "Only those with a single attribute",
+   "None, the DBMS chooses"
+  ],
+  "key": "Only one",
+  "source": "l1-s8",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "sq1",
+  "topic": "sql_basics",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "Which clause filters individual rows before any grouping takes place?",
+  "options": [
+   "HAVING",
+   "ORDER BY",
+   "WHERE",
+   "DISTINCT"
+  ],
+  "key": "WHERE",
+  "source": "l2-s6",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "sq2",
+  "topic": "sql_basics",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "Which keyword reverses the default sort order?",
+  "options": [
+   "REVERSE",
+   "DESC",
+   "FLIP",
+   "ASC"
+  ],
+  "key": "DESC",
+  "source": "l2-s7",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "sq3",
+  "topic": "sql_basics",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "Which clause filters groups after aggregation?",
+  "options": [
+   "WHERE",
+   "DISTINCT",
+   "ORDER BY",
+   "HAVING"
+  ],
+  "key": "HAVING",
+  "source": "l2-s6",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "sq4",
+  "topic": "sql_basics",
+  "difficulty": "medium",
+  "type": "short",
+  "text": "Which keyword removes duplicate rows from a result set?",
+  "options": [],
+  "key": "DISTINCT",
+  "required_terms": [
+   "distinct"
+  ],
+  "source": "l2-s9",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "sq5",
+  "topic": "sql_basics",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "Which statement about COUNT(column) is correct?",
+  "options": [
+   "It counts all rows including NULLs",
+   "It ignores NULL values in that column",
+   "It removes duplicate values",
+   "It must be used with ORDER BY"
+  ],
+  "key": "It ignores NULL values in that column",
+  "source": "l2-s9",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "jo1",
+  "topic": "joins",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "Which join returns only the rows that match in both tables?",
+  "options": [
+   "LEFT JOIN",
+   "FULL OUTER JOIN",
+   "CROSS JOIN",
+   "INNER JOIN"
+  ],
+  "key": "INNER JOIN",
+  "source": "l3-s3",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "jo6",
+  "topic": "joins",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "What does a self join use to tell the two copies of the table apart?",
+  "options": [
+   "Table aliases",
+   "Foreign keys",
+   "Views",
+   "Indexes"
+  ],
+  "key": "Table aliases",
+  "source": "l3-s10",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "jo2",
+  "topic": "joins",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "In a LEFT JOIN, what do the right-table columns contain when there is no match?",
+  "options": [
+   "Zero",
+   "Empty strings",
+   "NULL",
+   "The left-table values"
+  ],
+  "key": "NULL",
+  "source": "l3-s5",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "jo3",
+  "topic": "joins",
+  "difficulty": "medium",
+  "type": "short",
+  "text": "Table A has m rows and table B has n rows. How many rows does a CROSS JOIN return?",
+  "options": [],
+  "key": "m times n",
+  "required_terms": [
+   "m times n|m n|product|multiplied|multiply"
+  ],
+  "source": "l3-s8",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "jo7",
+  "topic": "joins",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "Which join returns all rows from both tables, with NULL where either side has no match?",
+  "options": [
+   "INNER JOIN",
+   "FULL OUTER JOIN",
+   "CROSS JOIN",
+   "LEFT JOIN"
+  ],
+  "key": "FULL OUTER JOIN",
+  "source": "l3-s6",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "jo4",
+  "topic": "joins",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "How do you find rows in the left table that have no match in the right table?",
+  "options": [
+   "INNER JOIN with WHERE the right-table column IS NULL",
+   "LEFT JOIN and filter WHERE a right-table column IS NULL",
+   "CROSS JOIN and filter on the ON clause",
+   "FULL OUTER JOIN with DISTINCT"
+  ],
+  "key": "LEFT JOIN and filter WHERE a right-table column IS NULL",
+  "source": "l3-s11",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "jo5",
+  "topic": "joins",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "A LEFT JOIN has a WHERE filter on a right-table column and returns no unmatched left rows. Why, and what is the fix?",
+  "options": [
+   "The WHERE removes NULL rows, so it acts like an INNER JOIN; put the condition in the ON clause",
+   "LEFT JOIN cannot be combined with WHERE; use a CROSS JOIN",
+   "The right table must be indexed; add an index",
+   "DISTINCT hides the rows; remove it"
+  ],
+  "key": "The WHERE removes NULL rows, so it acts like an INNER JOIN; put the condition in the ON clause",
+  "source": "l3-s12",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "nm1",
+  "topic": "normalisation",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "What does first normal form (1NF) require?",
+  "options": [
+   "No partial dependencies",
+   "Every attribute holds a single atomic value",
+   "No transitive dependencies",
+   "Every determinant is a superkey"
+  ],
+  "key": "Every attribute holds a single atomic value",
+  "source": "l4-s6",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "nm2",
+  "topic": "normalisation",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "Which normal form is stricter than 3NF?",
+  "options": [
+   "1NF",
+   "2NF",
+   "BCNF",
+   "None, 3NF is the strictest"
+  ],
+  "key": "BCNF",
+  "source": "l4-s11",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "nm3",
+  "topic": "normalisation",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "Which normal form removes transitive dependencies?",
+  "options": [
+   "1NF",
+   "2NF",
+   "3NF",
+   "BCNF"
+  ],
+  "key": "3NF",
+  "source": "l4-s10",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "nm4",
+  "topic": "normalisation",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "Which of these breaks first normal form?",
+  "options": [
+   "A column storing a comma-separated list of phone numbers",
+   "A table with a composite primary key",
+   "A foreign key to another table",
+   "A column that allows NULL"
+  ],
+  "key": "A column storing a comma-separated list of phone numbers",
+  "source": "l4-s6",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "nm5",
+  "topic": "normalisation",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "Which normal form removes partial dependencies?",
+  "options": [
+   "1NF",
+   "2NF",
+   "3NF",
+   "BCNF"
+  ],
+  "key": "3NF",
+  "source": "l4-s9",
+  "status": "unreviewed",
+  "dispute_count": 0,
+  "_note": "DELIBERATE ERROR for the failure demo: the right answer is 2NF. Built to pass mock verification."
+ },
+ {
+  "id": "nm6",
+  "topic": "normalisation",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "R(A, B, C) is decomposed into R1(A, B) and R2(B, C). When is this decomposition lossless?",
+  "options": [
+   "Whenever the two tables share at least one attribute",
+   "When the shared attribute is a key of at least one of the two tables",
+   "Only when both tables are in BCNF",
+   "When the shared attribute is not a key of either table"
+  ],
+  "key": "When the shared attribute is a key of at least one of the two tables",
+  "source": "l4-s12",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "nm7",
+  "topic": "normalisation",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "A table is in 3NF but violates BCNF. What must be true?",
+  "options": [
+   "A non-key attribute determines part of a candidate key",
+   "The table has a partial dependency",
+   "The table has a multi-valued attribute",
+   "The table has no candidate key"
+  ],
+  "key": "A non-key attribute determines part of a candidate key",
+  "source": "l4-s11",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "ix1",
+  "topic": "indexes",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "What is the main benefit of an index?",
+  "options": [
+   "It finds rows without scanning the whole table",
+   "It speeds up inserts",
+   "It removes duplicate rows",
+   "It enforces foreign keys"
+  ],
+  "key": "It finds rows without scanning the whole table",
+  "source": "l5-s3",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "ix6",
+  "topic": "indexes",
+  "difficulty": "easy",
+  "type": "mcq",
+  "text": "How many clustered indexes can a table have?",
+  "options": [
+   "One",
+   "Two",
+   "One per column",
+   "As many as it needs"
+  ],
+  "key": "One",
+  "source": "l5-s6",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "ix2",
+  "topic": "indexes",
+  "difficulty": "medium",
+  "type": "mcq",
+  "text": "What is the main cost of adding more indexes to a table?",
+  "options": [
+   "Slower inserts, updates and deletes",
+   "Slower reads",
+   "Less storage is used",
+   "Foreign keys stop working"
+  ],
+  "key": "Slower inserts, updates and deletes",
+  "source": "l5-s3",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "ix3",
+  "topic": "indexes",
+  "difficulty": "medium",
+  "type": "short",
+  "text": "Which type of index supports only equality lookups?",
+  "options": [],
+  "key": "Hash index",
+  "required_terms": [
+   "hash"
+  ],
+  "source": "l5-s7",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "ix4",
+  "topic": "indexes",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "Which query can use a composite index on (a, b)?",
+  "options": [
+   "A query that filters only on b",
+   "A query that filters on a",
+   "A query that sorts only by b",
+   "None, composite indexes are never used"
+  ],
+  "key": "A query that filters on a",
+  "source": "l5-s9",
+  "status": "unreviewed",
+  "dispute_count": 0
+ },
+ {
+  "id": "ix5",
+  "topic": "indexes",
+  "difficulty": "hard",
+  "type": "mcq",
+  "text": "Why is a boolean flag column usually a poor candidate for a B-tree index?",
+  "options": [
+   "B-trees cannot store booleans",
+   "Each value matches a large fraction of the table",
+   "Booleans cannot be sorted",
+   "It would break the primary key"
+  ],
+  "key": "Each value matches a large fraction of the table",
+  "source": "l5-s10",
+  "status": "unreviewed",
+  "dispute_count": 0
+ }
+]

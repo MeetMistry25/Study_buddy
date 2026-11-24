@@ -1,0 +1,11 @@
+{
+  "id": "databases",
+  "name": "Databases (demo module, made-up content)",
+  "topics": {
+    "relational_model": "Relational model",
+    "sql_basics": "SQL basics",
+    "joins": "Joins",
+    "normalisation": "Normalisation",
+    "indexes": "Indexes"
+  }
+}

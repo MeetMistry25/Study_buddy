@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Buddy</title><style>{% include 'base.css' %}
+main{display:grid;grid-template-columns:300px 1fr;gap:16px;max-width:1050px;margin:16px auto;padding:0 16px}
+@media(max-width:760px){main{grid-template-columns:1fr}}
+.side .row{margin-bottom:12px}.side select,.side button{width:100%}.modes{display:grid;gap:6px}
+.modes button.on{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin:2px 0 8px}.bar i{display:block;height:100%;background:var(--accent)}
+#chat{min-height:420px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 14px;border-radius:14px;background:var(--bg);border:1px solid var(--line)}
+.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.right{background:var(--goodbg);border-color:var(--good)}.wrong{background:var(--badbg);border-color:var(--bad)}
+.tag{font-size:12px;color:var(--mute);margin-bottom:4px}.opts{display:grid;gap:6px;margin-top:8px}.opts button{text-align:left}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.summary td,.summary th{padding:4px 10px 4px 0;text-align:left}
+</style></head><body>
+<header><h1>Study Buddy <span class="badge" id="mode"></span></h1>
+<nav><label class="mute">Student <select id="student"></select></label><a href="/lecturer">Lecturer page</a></nav></header>
+<main>
+<aside class="card side">
+ <div class="row"><h2>Module</h2><select id="module"></select></div>
+ <div class="row"><h2>Mode</h2><div class="modes">
+  <button data-mode="quiz" class="on">Quiz me</button><button data-mode="topic">Pick a topic</button><button data-mode="review">Review weak topics</button></div></div>
+ <div class="row" id="topicRow" hidden><select id="topic"></select></div>
+ <div class="row"><button class="primary" id="start">Start</button></div>
+ <h2>Your topic scores</h2><div id="scores"></div>
+ <div class="row" id="demoRow" hidden><button id="demo">Demo: replay the wrong-key failure</button></div>
+</aside>
+<section class="card"><div id="chat" aria-live="polite"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s), chat=$('#chat');
+let sid=null, mode='quiz', current=null, lastResult=null, busy=false;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const api=async(url,body)=>{const r=await fetch(url,body===undefined?{}:{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw new Error(j.error||'Something went wrong');return j};
+function add(html,cls=''){const d=document.createElement('div');d.className='msg '+cls;d.innerHTML=html;chat.appendChild(d);d.scrollIntoView({block:'nearest'});return d}
+function clearActs(){chat.querySelectorAll('.acts,.opts').forEach(e=>e.remove())}
+function acts(buttons){const d=document.createElement('div');d.className='acts';buttons.forEach(([label,fn,cls])=>{const b=document.createElement('button');b.textContent=label;if(cls)b.className=cls;b.onclick=fn;d.appendChild(b)});chat.lastElementChild.appendChild(d);return d}
+async function init(){
+ const m=await api('/api/modules');$('#mode').textContent=m.mode+' mode';
+ $('#student').innerHTML=Object.entries(m.students).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('');
+ $('#module').innerHTML=m.modules.map(x=>`<option>${esc(x.name)}</option>`).join('');
+ $('#topic').innerHTML=m.modules[0].topics.map(t=>`<option value="${t.id}">${esc(t.label)}</option>`).join('');
+ if(m.mode==='mock')$('#demoRow').hidden=false;
+ refresh();add('Hi, I\u2019m Study Buddy. I quiz you on your module\u2019s own slides and notes. Pick a mode and press Start.');
+}
+async function refresh(){
+ const s=await api(`/api/student/${$('#student').value}/scores`);
+ $('#scores').innerHTML=s.map(t=>`<div><div class="mute">${esc(t.label)} \u00b7 ${t.answers?Math.round(t.score*100)+'%':'new'}</div><div class="bar"><i style="width:${t.score*100}%"></i></div></div>`).join('');
+}
+document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('.modes button').forEach(x=>x.classList.toggle('on',x===b));$('#topicRow').hidden=mode!=='topic'});
+$('#student').onchange=()=>{sid=null;refresh();add('Switched student. Press Start for a new session.')};
+$('#start').onclick=async()=>{try{clear();const r=await api('/api/session',{student:$('#student').value,mode,topic:$('#topic').value});sid=r.session;handle(r)}catch(e){add(esc(e.message))}};
+$('#demo').onclick=async()=>{try{clear();const r=await api('/api/session',{student:$('#student').value,mode:'quiz'});sid=r.session;add('<b>Demo:</b> replaying the question whose answer key is wrong. Answer <b>2NF</b>, then press \u201cDispute / show source\u201d.');handle(await api(`/api/session/${sid}/next`,{question_id:'nm5'}))}catch(e){add(esc(e.message))}};
+function clear(){chat.innerHTML=''}
+function handle(r){
+ if(r.question)return showQuestion(r.question);
+ current=null;add(esc(r.message||'Nothing to ask right now.'));
+ acts([['Finish & see summary',finish,'primary']]);
+}
+function showQuestion(q){
+ current=q;lastResult=null;
+ const d=add(`<div class="tag">${esc(q.topic_label)} \u00b7 ${q.difficulty}</div><div>${esc(q.text)}</div>`);
+ if(q.type==='mcq'){const o=document.createElement('div');o.className='opts';q.options.forEach(t=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>submit(t);o.appendChild(b)});d.appendChild(o)}
+ else{const a=document.createElement('div');a.className='acts';a.innerHTML='<input id="free" placeholder="Type your answer" size="30"><button class="primary" id="go">Answer</button>';d.appendChild(a);
+  const f=a.querySelector('#free');a.querySelector('#go').onclick=()=>submit(f.value);f.onkeydown=e=>{if(e.key==='Enter')submit(f.value)};f.focus()}
+ const idk=document.createElement('div');idk.className='acts';const b=document.createElement('button');b.textContent="I don\u2019t know";b.onclick=()=>submit('',true);idk.appendChild(b);d.appendChild(idk);
+}
+async function submit(text,idk=false){
+ if(busy)return;busy=true;
+ try{clearActs();add(idk?'I don\u2019t know':esc(text||'(no answer)'),'me');
+  const r=await api(`/api/session/${sid}/answer`,{answer:text,idk});lastResult=r;
+  add(esc(r.message)+`<div class="src"><b>${esc(r.source.label)}</b>${r.source.lecture_title?' \u00b7 '+esc(r.source.lecture_title):''}<br>${esc(r.source.text)}</div>`,r.verdict==='right'?'right':'wrong');
+  add(`${esc(r.topic_label)}: ${Math.round(r.score_before*100)}% \u2192 ${Math.round(r.score_after*100)}%. Next difficulty here: ${r.next_difficulty}.`);
+  const b=[];
+  if(r.can_dispute)b.push(['Dispute / show source',dispute,'danger']);
+  if(r.offer_easier)b.push(['Try a similar, easier one',()=>next({easier:true})]);
+  b.push(['Keep going',()=>next({}),'primary'],['Finish & see summary',finish]);
+  add('Want to keep going?');acts(b);refresh();
+ }catch(e){add(esc(e.message))}finally{busy=false}
+}
+function dispute(){
+ clearActs();
+ const d=add('<div>Tell me why you think it\u2019s wrong, or just send it. Writing a reason is optional.</div>');
+ const a=document.createElement('div');a.className='acts';a.innerHTML='<input id="note" placeholder="Optional note" size="30"><button class="danger" id="send">Send dispute</button>';d.appendChild(a);
+ a.querySelector('#send').onclick=async()=>{const note=a.querySelector('#note').value;clearActs();if(note)add(esc(note),'me');
+  try{const r=await api(`/api/session/${sid}/dispute`,{note});
+   if(r.outcome==='key_wrong'){r.messages.slice(0,-1).forEach((m,i)=>add(esc(m),i===0?'':'right'));await refresh();
+     add(esc(r.messages.at(-1)));handle(r.next)}
+   else{add(esc(r.messages[0])+`<div class="src">${esc(r.source.label)}: \u201c${esc(r.source.passage)}\u201d</div>`);
+     add('Want to keep going?');acts([['Keep going',()=>next({}),'primary'],['Finish & see summary',finish]]);refresh()}
+  }catch(e){add(esc(e.message))}};
+}
+async function next(o){try{clearActs();handle(await api(`/api/session/${sid}/next`,o))}catch(e){add(esc(e.message))}}
+async function finish(){
+ try{clearActs();const s=await api(`/api/session/${sid}/end`,{});
+  if(!s.answered){add(esc(s.next_step));return}
+  const rows=s.topics.map(t=>`<tr><td>${esc(t.label)}</td><td>${t.right}/${t.total}</td><td>${t.status}</td></tr>`).join('');
+  add(`<h2>Session summary</h2><table class="summary"><tr><th>Topic</th><th>Right</th><th>Status</th></tr>${rows}</table>
+   <p><b>Strong:</b> ${esc(s.strong.join(', ')||'none yet')}<br><b>Weak:</b> ${esc(s.weak.join(', ')||'none')}</p><p><b>Next step:</b> ${esc(s.next_step)}</p><p class="mute">Your scores are saved for next time.</p>`);
+  sid=null;refresh();
+ }catch(e){add(esc(e.message))}
+}
+init();
+</script></body></html>

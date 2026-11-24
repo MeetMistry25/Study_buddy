@@ -1,0 +1,12 @@
+# Render blueprint. Free-tier disks are temporary, so scores reset on each deploy (fine for a demo).
+services:
+  - type: web
+    name: study-buddy
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn wsgi:app --workers 1 --threads 4 --bind 0.0.0.0:$PORT
+    envVars:
+      - key: SB_MODE
+        value: mock
+      - key: SB_LECTURER_PASSWORD
+        sync: false   # set in the Render dashboard, never in the repo

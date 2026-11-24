@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Study Buddy: lecturer</title><style>{% include 'base.css' %}
+main{max-width:900px;margin:16px auto;padding:0 16px;display:grid;gap:16px}
+.q{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:10px}
+.q ul{margin:6px 0;padding-left:20px}.ok{color:var(--good);font-weight:600}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.pill{font-size:12px;border:1px solid var(--line);border-radius:99px;padding:1px 8px;color:var(--mute)}
+.bar{height:14px;background:var(--line);border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--accent)}
+table{border-collapse:collapse;width:100%}td{padding:6px 8px 6px 0;vertical-align:middle}
+</style></head><body>
+<header><h1>Study Buddy <span class="badge">lecturer</span></h1><nav><a href="/">Student page</a></nav></header>
+<main>
+<section class="card"><h2>1. Module files</h2>
+ <p class="mute">The bot may only use these files. Upload .md or .txt with <code>## Slide N</code> sections (see data/module for the format).</p>
+ <div class="acts"><input type="file" id="files" multiple accept=".md,.txt"><button class="primary" id="up">Upload and index</button></div><div id="upMsg" class="mute"></div></section>
+<section class="card"><h2>2. Sample questions to check</h2><p class="mute">Approve, edit the answer key, or reject. Rejected questions are never used.</p><div id="samples"></div></section>
+<section class="card"><h2>3. Review list (flagged by students)</h2><p class="mute">Student names are never shown.</p><div id="flags"></div></section>
+<section class="card"><h2>4. Class weak topics</h2><div id="class"></div><div id="sugg"></div></section>
+</main>
+<script>
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const api=async(url,body)=>{const r=await fetch(url,body===undefined?{}:{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)});const j=await r.json();if(!r.ok)throw new Error(j.error||'Something went wrong');return j};
+function qHtml(q,extra=''){return `<div class="q" data-id="${q.id}"><span class="pill">${esc(q.topic)}</span> <span class="pill">${q.difficulty}</span> <span class="pill">${q.status}</span>
+ <p><b>${esc(q.text)}</b></p>${q.options.length?'<ul>'+q.options.map(o=>`<li class="${o===q.key?'ok':''}">${esc(o)}${o===q.key?' \u2713 key':''}</li>`).join('')+'</ul>':`<p class="ok">Key: ${esc(q.key)}</p>`}
+ <div class="mute">Source: ${esc(q.source.label)}. \u201c${esc(q.source.text)}\u201d</div>${extra}</div>`}
+function keyPicker(q){return q.options.length?`<select class="k">${q.options.map(o=>`<option ${o===q.key?'selected':''}>${esc(o)}</option>`).join('')}</select>`:`<input class="k" value="${esc(q.key)}" size="24">`}
+async function loadSamples(){
+ const s=await api('/api/lecturer/samples');
+ $('#samples').innerHTML=s.map(q=>qHtml(q,`<div class="acts"><button data-a="approve">Approve</button><span>${keyPicker(q)} <button data-a="edit">Save edited key</button></span><button class="danger" data-a="reject">Reject</button></div>`)).join('')||'<p class="mute">No questions yet.</p>';
+}
+$('#samples').onclick=async e=>{const a=e.target.dataset.a;if(!a)return;const box=e.target.closest('.q');
+ try{await api('/api/lecturer/review',{question_id:box.dataset.id,action:a,key:box.querySelector('.k')?.value});loadSamples()}catch(x){alert(x.message)}};
+async function loadFlags(){
+ const f=await api('/api/lecturer/flags');
+ $('#flags').innerHTML=f.map(q=>qHtml(q,`<p class="mute">${q.flags} flag(s): ${q.kinds.join(', ')}${q.notes.length?'. Notes: '+q.notes.map(esc).join(' | '):''}${q.resolved?'. <b>Resolved</b>':''}</p>
+  ${q.resolved?'':`<div class="acts"><span>${keyPicker(q)} <button data-a="fix_key">Fix key</button></span><button class="danger" data-a="remove">Remove question</button></div>`}`)).join('')||'<p class="mute">Nothing flagged.</p>';
+}
+$('#flags').onclick=async e=>{const a=e.target.dataset.a;if(!a)return;const box=e.target.closest('.q');
+ try{await api('/api/lecturer/flags/resolve',{question_id:box.dataset.id,action:a,key:box.querySelector('.k')?.value});loadFlags()}catch(x){alert(x.message)}};
+async function loadClass(){
+ const c=await api('/api/lecturer/class');
+ $('#class').innerHTML=(c.topics.length?'<table>'+c.topics.map(t=>`<tr><td style="width:30%">${esc(t.label)}</td><td><div class="bar"><i style="width:${t.percent}%"></i></div></td><td style="width:60px">${t.percent}%</td></tr>`).join('')+'</table>':'<p class="mute">Not enough data yet.</p>')
+  +(c.hidden.length?`<p class="mute">Hidden until at least ${c.min_students} students have answered: ${c.hidden.map(esc).join(', ')}.</p>`:'');
+ const s=await api('/api/lecturer/suggestion');
+ $('#sugg').innerHTML=s?`<div class="q"><b>Suggestion</b><p>${esc(s.text)}</p></div>`:'';
+}
+$('#up').onclick=async()=>{const fd=new FormData();[...$('#files').files].forEach(f=>fd.append('files',f));
+ try{const r=await fetch('/api/lecturer/upload',{method:'POST',body:fd});const j=await r.json();if(!r.ok)throw new Error(j.error);
+  $('#upMsg').textContent=`Indexed ${j.chunks} slides/sections across: ${j.topics.join(', ')}.`;loadSamples()}catch(e){$('#upMsg').textContent=e.message}};
+loadSamples();loadFlags();loadClass();
+</script></body></html>
